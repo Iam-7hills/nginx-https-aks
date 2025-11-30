@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-https
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-app-https
+  template:
+    metadata:
+      labels:
+        app: second-app-https
+    spec:
+      containers:
+      - name: second-app-https
+        image: iam7hills/dockerdemo:nginx-https
+        imagePullPolicy: Always   # <--- Always pull the image
+        ports:
+        - containerPort: 443
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: second-app-https-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: second-app-https
+  ports:
+    - port: 443       # Service port
+      targetPort: 443  # Container port
